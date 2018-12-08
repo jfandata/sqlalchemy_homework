@@ -56,7 +56,8 @@ def welcome():
 @app.route("/api/v1.0/precipitation")
 def precipitation():
     """convert query results using date as the key and prcp as the value"""
-    prcp_results = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= last_year).group_by(Measurement.date).all()
+    prcp_results = session.query(Measurement.date, Measurement.prcp).\
+    filter(Measurement.date >= last_year).group_by(Measurement.date).all()
 
     return jsonify(prcp_results)
 
@@ -79,7 +80,8 @@ def startdate(date):
     """Return a list of min temp, avg temp, max temp for start or start-end range"""
     """<start> only: TMIN, TAVG, TMAX for all dates >= start date"""
     """<start> and <start>/<end>: TMIN, TAVG, TMAX for dates in between"""
-    s_temps = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).filter(Measurement.date >= date).all()
+    s_temps = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+    filter(Measurement.date >= date).all()
 
     return jsonify(s_temps)
 
@@ -87,7 +89,8 @@ def startdate(date):
 def startenddate(start, end):
     """Return a list of min temp, avg temp, max temp for start or start-end range"""
     """<start> and <start>/<end>: TMIN, TAVG, TMAX for dates in between"""
-    se_temps = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).filter(Measurement.date >= date).filter(Measurement.date <= end).all()
+    se_temps = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+    filter(Measurement.date >= date).filter(Measurement.date <= end).all()
 
     return jsonify(se_temps)
 
