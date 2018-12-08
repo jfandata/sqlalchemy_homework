@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import datetime as dt
 
 
 import sqlalchemy
@@ -76,12 +77,11 @@ def tobs():
     return jsonify(temperature)
 
 @app.route("/api/v1.0/<start>")
-def startdate(date):
+def startdate(start):
     """Return a list of min temp, avg temp, max temp for start or start-end range"""
     """<start> only: TMIN, TAVG, TMAX for all dates >= start date"""
-    """<start> and <start>/<end>: TMIN, TAVG, TMAX for dates in between"""
     s_temps = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
-    filter(Measurement.date >= date).all()
+    filter(Measurement.date >= start).all()
 
     return jsonify(s_temps)
 
@@ -90,7 +90,7 @@ def startenddate(start, end):
     """Return a list of min temp, avg temp, max temp for start or start-end range"""
     """<start> and <start>/<end>: TMIN, TAVG, TMAX for dates in between"""
     se_temps = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
-    filter(Measurement.date >= date).filter(Measurement.date <= end).all()
+    filter(Measurement.date >= start).filter(Measurement.date <= end).all()
 
     return jsonify(se_temps)
 
